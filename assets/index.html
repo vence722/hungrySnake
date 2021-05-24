@@ -1,0 +1,72 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <script src="wasm_exec.js"></script>
+    <script>
+        const go = new Go();
+        WebAssembly.instantiateStreaming(fetch("hungrySnake.wasm"), go.importObject).then((result) => {
+            go.run(result.instance);
+            main();
+        });
+
+        const BOARD_WIDTH = 16;
+        const CELL_WIDTH = 50;
+        const CELL_SPAN = 2;
+        const CELL_SIZE = CELL_WIDTH - CELL_SPAN
+
+        function main() {
+            var canvas = document.getElementById('gameBoard');
+            var ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = "rgb(0,0,0)";
+            setInterval(render, 100, ctx);
+
+            document.addEventListener('keypress', function (e) {
+                switch (e.key) {
+                    case 'w':
+                        changeDirection('up');
+                        break;
+                    case 'a':
+                        changeDirection('left');
+                        break;
+                    case 's':
+                        changeDirection('down');
+                        break;
+                    case 'd':
+                        changeDirection('right');
+                        break;
+                }
+            });
+        }
+
+        function render(ctx) {
+            // Get input from Go
+            const data = getGameStatus();
+
+            // Call draw()
+            draw(ctx, data.blocks);
+        }
+
+        function draw(ctx, blocks) {
+            var cache = {};
+            for (const block of blocks) {
+                cache[`${block.x}-${block.y}`] = true;
+            }
+            ctx.clearRect(0, 0, BOARD_WIDTH * CELL_WIDTH, BOARD_WIDTH * CELL_WIDTH)
+            for (var i = 0; i < BOARD_WIDTH; i++) {
+                for (var j = 0; j < BOARD_WIDTH; j++) {
+                    if (cache[`${i}-${j}`]) {
+                        ctx.fillRect(i * CELL_WIDTH + CELL_SPAN, j * CELL_WIDTH + CELL_SPAN, CELL_SIZE - CELL_SPAN, CELL_SIZE - CELL_SPAN);
+                    } else {
+                        ctx.strokeRect(i * CELL_WIDTH + CELL_SPAN, j * CELL_WIDTH + CELL_SPAN, CELL_SIZE - CELL_SPAN, CELL_SIZE - CELL_SPAN);
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <canvas id="gameBoard" width="800" height="800">
+    </canvas>
+</body>
+</html>
