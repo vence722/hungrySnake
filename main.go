@@ -165,6 +165,18 @@ func tick() {
 		}
 	}
 
+	// if SnakeHead goes to the Food cell
+	// add score by 1, and generate food
+	// and then add 1 cell in SnakeBody
+	if SnakeHead.X == Food.X && SnakeHead.Y == Food.Y {
+		Score += 1
+
+		newBody := &Cell{X:lastX, Y:lastY, Type: CellTypeSnakeBody}
+		SnakeBody = append(SnakeBody, newBody)
+
+		generateFood()
+	}
+
 	MovedAfterChangeDirection = true
 }
 
