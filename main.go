@@ -36,19 +36,25 @@ var (
 	GameSpeed int
 
 	MovedAfterChangeDirection bool // To avoid bug when changing direction multiple times before next tick
+	Playing bool // Controls if the game is continuing
 )
 
 func init() {
 	rand.Seed(time.Now().Unix())
 
+	startNewGame()
+}
+
+func startNewGame() {
 	SnakeHead = &Cell{ X: 4, Y: 2, Type: CellTypeSnakeHead}
 	SnakeBody = []*Cell{
 		{ X: 3, Y: 2, Type: CellTypeSnakeBody},
 		{ X: 2, Y: 2, Type: CellTypeSnakeBody},
 	}
 
-	Direction = DirectionDown
+	Direction = DirectionRight
 	GameSpeed = 100
+	Playing = true
 
 	generateFood()
 }
@@ -78,7 +84,7 @@ func main() {
 	js.Global().Set("getGameStatus", js.FuncOf(getGameStatus))
 	js.Global().Set("changeDirection", js.FuncOf(changeDirection))
 
-	for {
+	for Playing {
 		tick()
 		time.Sleep(time.Duration(GameSpeed) * time.Millisecond)
 	}
@@ -136,6 +142,15 @@ func tick() {
 		SnakeBody = append(SnakeBody, newBody)
 
 		generateFood()
+	}
+
+	// if SnakeHead touches any cell inside SnakeBody
+	// stops the game, and notify for the end of the game
+	for _, body := range SnakeBody {
+		if SnakeHead.X == body.X && SnakeHead.Y == body.Y {
+			Playing = false
+			break
+		}
 	}
 
 	MovedAfterChangeDirection = true
