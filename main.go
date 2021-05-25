@@ -85,81 +85,45 @@ func main() {
 }
 
 func tick() {
-	var lastX, lastY int
+	var lastX = SnakeHead.X
+	var lastY = SnakeHead.Y
 
+	// update SnakeHead
 	switch Direction {
 	case DirectionLeft:
-		lastX = SnakeHead.X
-		lastY = SnakeHead.Y
-
 		if SnakeHead.X == 0 {
 			SnakeHead.X = BoardWidth
 		} else {
 			SnakeHead.X -= 1
 		}
-
-		for _, body := range SnakeBody {
-			bodylastX := body.X
-			bodylastY := body.Y
-			body.X = lastX
-			body.Y = lastY
-			lastX = bodylastX
-			lastY = bodylastY
-		}
 	case DirectionUp:
-		lastX = SnakeHead.X
-		lastY = SnakeHead.Y
-
 		if SnakeHead.Y == 0 {
 			SnakeHead.Y = BoardWidth
 		} else {
 			SnakeHead.Y -= 1
 		}
-
-		for _, body := range SnakeBody {
-			bodylastX := body.X
-			bodylastY := body.Y
-			body.X = lastX
-			body.Y = lastY
-			lastX = bodylastX
-			lastY = bodylastY
-		}
 	case DirectionRight:
-		lastX = SnakeHead.X
-		lastY = SnakeHead.Y
-
 		if SnakeHead.X == BoardWidth - 1 {
 			SnakeHead.X = 0
 		} else {
 			SnakeHead.X += 1
 		}
-
-		for _, body := range SnakeBody {
-			bodylastX := body.X
-			bodylastY := body.Y
-			body.X = lastX
-			body.Y = lastY
-			lastX = bodylastX
-			lastY = bodylastY
-		}
 	case DirectionDown:
-		lastX = SnakeHead.X
-		lastY = SnakeHead.Y
-
 		if SnakeHead.Y == BoardWidth - 1 {
 			SnakeHead.Y = 0
 		} else {
 			SnakeHead.Y += 1
 		}
+	}
 
-		for _, body := range SnakeBody {
-			bodylastX := body.X
-			bodylastY := body.Y
-			body.X = lastX
-			body.Y = lastY
-			lastX = bodylastX
-			lastY = bodylastY
-		}
+	// update SnakeBody
+	for _, body := range SnakeBody {
+		bodylastX := body.X
+		bodylastY := body.Y
+		body.X = lastX
+		body.Y = lastY
+		lastX = bodylastX
+		lastY = bodylastY
 	}
 
 	// if SnakeHead goes to the Food cell
