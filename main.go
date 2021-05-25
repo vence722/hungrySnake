@@ -92,13 +92,13 @@ func tick() {
 	switch Direction {
 	case DirectionLeft:
 		if SnakeHead.X == 0 {
-			SnakeHead.X = BoardWidth
+			SnakeHead.X = BoardWidth - 1
 		} else {
 			SnakeHead.X -= 1
 		}
 	case DirectionUp:
 		if SnakeHead.Y == 0 {
-			SnakeHead.Y = BoardWidth
+			SnakeHead.Y = BoardWidth - 1
 		} else {
 			SnakeHead.Y -= 1
 		}
