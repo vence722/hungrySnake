@@ -18,9 +18,6 @@ const (
 	DirectionDown
 
 	BoardWidth = 16
-
-	GameSpeedNormal = 500
-	GameSpeedFast = 200
 )
 
 type Cell struct {
@@ -51,7 +48,7 @@ func init() {
 	}
 
 	Direction = DirectionDown
-	GameSpeed = GameSpeedNormal
+	GameSpeed = 100
 
 	generateFood()
 }
