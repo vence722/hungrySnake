@@ -52,6 +52,7 @@ func startNewGame() {
 		{ X: 2, Y: 2, Type: CellTypeSnakeBody},
 	}
 
+	Score = 0
 	Direction = DirectionRight
 	GameSpeed = 100
 	Playing = true
@@ -83,9 +84,12 @@ func main() {
 
 	js.Global().Set("getGameStatus", js.FuncOf(getGameStatus))
 	js.Global().Set("changeDirection", js.FuncOf(changeDirection))
+	js.Global().Set("restartGame", js.FuncOf(restartGame))
 
-	for Playing {
-		tick()
+	for {
+		if Playing {
+			tick()
+		}
 		time.Sleep(time.Duration(GameSpeed) * time.Millisecond)
 	}
 }
@@ -193,5 +197,10 @@ func changeDirection(this js.Value, args []js.Value) interface{} {
 		}
 	}
 	MovedAfterChangeDirection = false
+	return nil
+}
+
+func restartGame(this js.Value, args []js.Value) interface{} {
+	startNewGame()
 	return nil
 }
